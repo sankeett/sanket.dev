@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+body {
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+  margin: 0; /* Removes default margin */
+  padding: 0; /* Removes default padding */
+}
+
+html{
+  scroll-behavior: smooth;
+}
