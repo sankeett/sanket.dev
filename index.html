@@ -1,13 +1,930 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sanket.dev</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanket Full-Stack Engineer & Product Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Mono:wght@300;400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0e0d0c;
+    --ink2: #1a1815;
+    --ink3: #272420;
+    --amber: #d4871a;
+    --amber-light: #e8a84a;
+    --amber-dim: rgba(212, 135, 26, 0.15);
+    --cream: #f5f0e8;
+    --cream-dim: rgba(245, 240, 232, 0.6);
+    --muted: rgba(245, 240, 232, 0.38);
+    --border: rgba(245, 240, 232, 0.1);
+    --border-amber: rgba(212, 135, 26, 0.3);
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-sans: 'Instrument Sans', system-ui, sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── Noise texture overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* ── Subtle radial glow ── */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80vw;
+    height: 80vh;
+    background: radial-gradient(ellipse, rgba(212,135,26,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    border-bottom: 0.5px solid var(--border);
+    background: rgba(14, 13, 12, 0.85);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--cream);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-logo span { color: var(--amber); }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--cream); }
+
+  .nav-cta {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.1em;
+    color: var(--amber) !important;
+    border: 0.5px solid var(--border-amber);
+    padding: 0.45rem 1.1rem;
+    border-radius: 2px;
+    transition: background 0.2s, color 0.2s !important;
+  }
+
+  .nav-cta:hover {
+    background: var(--amber-dim) !important;
+    color: var(--amber-light) !important;
+  }
+
+  /* ── Section layout ── */
+  section { position: relative; z-index: 1; }
+
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 3rem;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 3rem 5rem;
+    max-width: 1080px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 300;
+    color: var(--amber);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 0.5px;
+    background: var(--amber);
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3.2rem, 7vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--amber-light);
+  }
+
+  .hero-sub {
+    max-width: 520px;
+    color: var(--cream-dim);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--amber);
+    color: var(--ink);
+    padding: 0.75rem 1.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { background: var(--amber-light); transform: translateY(-1px); }
+
+  .btn-ghost {
+    color: var(--cream-dim);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 0.5px solid var(--border);
+    border-radius: 2px;
+    transition: color 0.2s, border-color 0.2s;
+    display: inline-block;
+  }
+
+  .btn-ghost:hover { color: var(--cream); border-color: rgba(245,240,232,0.3); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 3rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1.5rem;
+    height: 0.5px;
+    background: var(--muted);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0%, 100% { transform: scaleX(1); opacity: 1; }
+    50% { transform: scaleX(1.6); opacity: 0.4; }
+  }
+
+  /* ── Divider ── */
+  .section-divider {
+    border: none;
+    border-top: 0.5px solid var(--border);
+    margin: 0;
+  }
+
+  /* ── Featured work (Basebrew) ── */
+  .featured {
+    padding: 7rem 0;
+    background: var(--ink2);
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 300;
+    color: var(--amber);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 3.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 1.5rem;
+    height: 0.5px;
+    background: var(--amber);
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 0.5px solid var(--border);
+  }
+
+  .featured-main {
+    grid-column: 1 / -1;
+    background: var(--ink2);
+    padding: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .featured-main-left {}
+
+  .project-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--amber);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .project-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--cream);
+    margin-bottom: 1rem;
+  }
+
+  .project-title em {
+    font-style: italic;
+    color: var(--amber-light);
+  }
+
+  .project-desc {
+    color: var(--cream-dim);
+    font-size: 0.92rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 0.5px solid var(--border);
+    padding: 0.25rem 0.6rem;
+    border-radius: 1px;
+  }
+
+  .featured-main-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .stat-block {
+    border-left: 2px solid var(--amber);
+    padding-left: 1.25rem;
+  }
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .project-card {
+    background: var(--ink2);
+    padding: 2rem;
+  }
+
+  .project-card .project-title {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .project-card .project-desc {
+    font-size: 0.85rem;
+  }
+
+  /* ── Skills / services ── */
+  .services {
+    padding: 7rem 0;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 0.5px solid var(--border);
+    margin-top: 3.5rem;
+  }
+
+  .service-item {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    transition: background 0.2s;
+  }
+
+  .service-item:hover { background: var(--ink2); }
+
+  .service-num {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 300;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .service-name {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 0.75rem;
+    line-height: 1.25;
+  }
+
+  .service-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  /* ── Experience ── */
+  .experience {
+    padding: 7rem 0;
+    background: var(--ink2);
+  }
+
+  .exp-list {
+    margin-top: 3.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .exp-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 3rem;
+    padding: 2.5rem 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .exp-item:first-child { border-top: 0.5px solid var(--border); }
+
+  .exp-meta {
+    padding-top: 0.2rem;
+  }
+
+  .exp-period {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 300;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+
+  .exp-company {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .exp-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 0.6rem;
+  }
+
+  .exp-desc {
+    font-size: 0.85rem;
+    color: var(--cream-dim);
+    line-height: 1.8;
+  }
+
+  /* ── Testimonial ── */
+  .testimonial-section {
+    padding: 6rem 0;
+    border-top: 0.5px solid var(--border);
+  }
+
+  .testimonial-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+
+  .testimonial-card {
+    border: 0.5px solid var(--border);
+    padding: 2rem;
+    border-radius: 2px;
+    background: var(--ink2);
+    transition: border-color 0.2s;
+  }
+
+  .testimonial-card:hover { border-color: var(--border-amber); }
+
+  .testimonial-quote {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--cream-dim);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonial-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .testimonial-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--amber-dim);
+    border: 0.5px solid var(--border-amber);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: var(--amber);
+    flex-shrink: 0;
+  }
+
+  .testimonial-name {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+
+  .testimonial-role {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  /* ── Contact ── */
+  .contact {
+    padding: 8rem 0;
+    text-align: center;
+  }
+
+  .contact h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 1.25rem;
+  }
+
+  .contact h2 em {
+    font-style: italic;
+    color: var(--amber-light);
+  }
+
+  .contact-sub {
+    color: var(--cream-dim);
+    font-size: 0.95rem;
+    max-width: 440px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.75;
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-brand {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--muted);
+  }
+
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-tag { animation: fadeUp 0.6s ease 0.1s both; }
+  .hero h1 { animation: fadeUp 0.7s ease 0.2s both; }
+  .hero-sub { animation: fadeUp 0.7s ease 0.35s both; }
+  .hero-actions { animation: fadeUp 0.7s ease 0.48s both; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.5rem 5rem; }
+    .container { padding: 0 1.5rem; }
+    .featured-main { grid-template-columns: 1fr; gap: 2rem; padding: 2rem; }
+    .featured-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .testimonial-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.5rem; }
+    .hero-scroll { left: 1.5rem; }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <a href="#" class="nav-logo">Sanket<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact" class="nav-cta">Hire me →</a></li>
+  </ul>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="hero" id="top">
+  <p class="hero-tag">Full-Stack Engineer &amp; Product Builder</p>
+  <h1>Turning ideas into<br><em>products that ship.</em></h1>
+  <p class="hero-sub">
+    I build fast, scalable web products from zero to launch and beyond.
+    Currently open for freelance projects. Recent work includes scaling
+    <strong style="color:var(--cream);">Basebrew</strong> from concept to a live SaaS.
+  </p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Let's work together</a>
+    <a href="#work" class="btn-ghost">View my work</a>
+  </div>
+  <p class="hero-scroll">Scroll to explore</p>
+</div>
+
+<hr class="section-divider">
+
+<!-- ── Featured Work (Basebrew) ── -->
+<section class="featured" id="work">
+  <div class="container">
+    <p class="section-label">Featured work</p>
+    <div class="featured-grid">
+
+      <!-- Basebrew main card -->
+      <div class="featured-main">
+        <div class="featured-main-left">
+          <p class="project-eyebrow">2024 · Present &nbsp;·&nbsp; PWA &nbsp;·&nbsp; Solo Founder</p>
+          <h2 class="project-title">Basebrew<br><em>Work-friendly cafe discovery.</em></h2>
+          <p class="project-desc">
+            Built Basebrew from zero: a Progressive Web App for Chandigarh Tricity that helps freelancers, students, and remote workers find verified work-friendly cafes. Every listing is personally verified for WiFi speed, outlet count, noise level, and crowd heatmap. 31 cafes live across 3 cities. First merchant partner onboarded. No App Store needed.
+          </p>
+          <div class="tag-list">
+            <span class="tag">PWA</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">MongoDB</span>
+            <span class="tag">JWT Auth</span>
+            <span class="tag">Geolocation</span>
+            <span class="tag">Admin Dashboard</span>
+            <span class="tag">Figma</span>
+          </div>
+        </div>
+        <div class="featured-main-right">
+          <div class="stat-block">
+            <div class="stat-num">31</div>
+            <div class="stat-label">Verified cafes live across Chandigarh, Mohali and Panchkula</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Cities covered. Tricity architecture ready for Delhi, Pune, Bangalore</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-num">0 → 1</div>
+            <div class="stat-label">Solo built: product, design, backend, admin panel, merchant onboarding</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="project-card">
+        <p class="project-eyebrow">E-commerce · Full-stack</p>
+        <h3 class="project-title">Multi-tenant<br><em>store platform</em></h3>
+        <p class="project-desc">
+          Built a white-label e-commerce system supporting multiple independent store owners under a single codebase. Custom dashboard, inventory, and order management.
+        </p>
+        <div class="tag-list" style="margin-top:1rem">
+          <span class="tag">React</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">MongoDB</span>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="project-card">
+        <p class="project-eyebrow">Hospitality · POS Software</p>
+        <h3 class="project-title">Cafe POS<br><em>billing system</em></h3>
+        <p class="project-desc">
+          Built a custom point-of-sale and billing system for a cafe client. Handles order management, table tracking, split bills, daily sales reports, and kitchen ticket printing. Deployed and live in production.
+        </p>
+        <div class="tag-list" style="margin-top:1rem">
+          <span class="tag">React</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">MongoDB</span>
+          <span class="tag">Thermal Print</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Services ── -->
+<section class="services" id="services">
+  <div class="container">
+    <p class="section-label">What I do</p>
+    <div class="services-grid">
+      <div class="service-item">
+        <span class="service-num">01</span>
+        <h3 class="service-name">Full-Stack<br>Web Development</h3>
+        <p class="service-desc">End-to-end product development in Next.js, React, Node.js, and PostgreSQL. From a landing page to a multi-tenant SaaS. I own the whole stack..</p>
+      </div>
+      <div class="service-item">
+        <span class="service-num">02</span>
+        <h3 class="service-name">MVP & SaaS<br>Launch</h3>
+        <p class="service-desc">Got an idea? I'll help you define scope, cut the right corners, and ship a working product fast. Proven with Basebrew built and launched in 4 months.</p>
+      </div>
+      <div class="service-item">
+        <span class="service-num">03</span>
+        <h3 class="service-name">UI Design &<br>Figma Prototyping</h3>
+        <p class="service-desc">I design in Figma before I code. Clean, functional interfaces that look sharp and convert not just technically correct but visually strong.</p>
+      </div>
+      <div class="service-item">
+        <span class="service-num">04</span>
+        <h3 class="service-name">API Integration<br>& Automation</h3>
+        <p class="service-desc">Connect your product to anything: Stripe, webhooks, third-party APIs, Zapier, or custom pipelines. I'll make the pieces talk.</p>
+      </div>
+      <div class="service-item">
+        <span class="service-num">05</span>
+        <h3 class="service-name">Code Review<br>& Rescue</h3>
+        <p class="service-desc">Inherited a mess? I'll audit, refactor, and stabilize your codebase. No judgment, just clean, maintainable code you can build on.</p>
+      </div>
+      <div class="service-item">
+        <span class="service-num">06</span>
+        <h3 class="service-name">Ongoing Dev<br>Retainer</h3>
+        <p class="service-desc">For startups and founders who need a reliable engineering partner, not just a one-off hire. Weekly hours, clear communication, real output.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Experience ── -->
+<section class="experience" id="experience">
+  <div class="container">
+    <p class="section-label">Experience</p>
+    <div class="exp-list">
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <span class="exp-period">2024 Now</span>
+          <span class="exp-company">Basebrew</span>
+        </div>
+        <div>
+          <h3 class="exp-title">Founder &amp; Full-Stack Engineer</h3>
+          <p class="exp-desc">
+            Conceived, designed, and built Basebrew from scratch: a Progressive Web App helping freelancers and remote workers find verified work-friendly cafes in Chandigarh Tricity. Personally visited and verified every listing for WiFi speed, outlet count, noise level, and crowd data. Handled the full stack: Node.js API, MongoDB, JWT auth, geolocation, merchant admin panel, and PWA architecture. 31 cafes live, first merchant partner onboarded.
+          </p>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <span class="exp-period">2022 2024</span>
+          <span class="exp-company">Freelance</span>
+        </div>
+        <div>
+          <h3 class="exp-title">Full-Stack Developer</h3>
+          <p class="exp-desc">
+            Delivered web applications and dashboards for clients across e-commerce, logistics, and B2B SaaS. Worked directly with founders and product teams to spec requirements, design solutions, and ship on deadline.
+          </p>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <span class="exp-period">2020 2022</span>
+          <span class="exp-company">Agency / In-house</span>
+        </div>
+        <div>
+          <h3 class="exp-title">Frontend Developer</h3>
+          <p class="exp-desc">
+            Built responsive, performance-optimized web interfaces in React and Vue for agency clients. Sharpened skills in component architecture, API consumption, and delivery at speed.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonials ── -->
+<section class="testimonial-section">
+  <div class="container">
+    <p class="section-label">What clients say</p>
+    <div class="testimonial-grid">
+
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"Sanket built exactly what we scoped on time, no surprises. He understood the product well enough to push back when a feature didn't make sense. That's rare."</p>
+        <div class="testimonial-meta">
+          <div class="testimonial-avatar">RK</div>
+          <div>
+            <div class="testimonial-name">Rahul K.</div>
+            <div class="testimonial-role">Founder, B2B SaaS startup</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"We needed an MVP in 6 weeks. Sanket shipped it in 5 and it actually looked good. We've kept him on retainer since."</p>
+        <div class="testimonial-meta">
+          <div class="testimonial-avatar">PM</div>
+          <div>
+            <div class="testimonial-name">Priya M.</div>
+            <div class="testimonial-role">CEO, logistics platform</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"The design sensibility combined with the technical ability is hard to find in one person. Sanket delivered both. Highly recommend."</p>
+        <div class="testimonial-meta">
+          <div class="testimonial-avatar">AV</div>
+          <div>
+            <div class="testimonial-name">Aditya V.</div>
+            <div class="testimonial-role">Product Lead, e-commerce brand</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"Communication was clear throughout. Sanket kept us in the loop, flagged blockers early, and delivered a codebase we could actually maintain. Not always easy to find."</p>
+        <div class="testimonial-meta">
+          <div class="testimonial-avatar">SN</div>
+          <div>
+            <div class="testimonial-name">Sara N.</div>
+            <div class="testimonial-role">CTO, early-stage startup</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Contact ── -->
+<section class="contact" id="contact">
+  <div class="container">
+    <p class="section-label" style="justify-content:center">Get in touch</p>
+    <h2>Got a project?<br><em>Let's make it real.</em></h2>
+    <p class="contact-sub">
+      Open to freelance projects, MVPs, and retainer work.
+      Reply within 24 hours, usually faster.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:golekarsanket@gmail.com" class="btn-primary">golekarsanket@gmail.com</a>
+      <a href="https://wa.me/919527386492" target="_blank" class="btn-ghost">WhatsApp →</a>
+      <a href="https://github.com/sankeett" target="_blank" class="btn-ghost">GitHub →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <span class="footer-brand">Sanket · Full-Stack Engineer</span>
+  <span class="footer-copy">© 2025 · Available for freelance</span>
+</footer>
+
+</body>
 </html>
